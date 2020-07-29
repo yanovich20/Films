@@ -44,7 +44,11 @@ namespace Films.TagHelpers
             startIndex = startIndex > 0 ? startIndex : MaxPagesToView/2 - PageModel.PageNumber;
             var endIndex = 0;
             endIndex = PageModel.PageNumber + MaxPagesToView / 2;
-            endIndex = endIndex <= PageModel.TotalPages ? endIndex : PageModel.TotalPages + MaxPagesToView / 2 - PageModel.PageNumber;
+            if (endIndex > PageModel.TotalPages)
+            {
+                endIndex = PageModel.TotalPages; //+ MaxPagesToView / 2 - PageModel.PageNumber;
+                startIndex = startIndex - (PageModel.TotalPages - PageModel.PageNumber)-1;
+            }
             if (PageModel.TotalPages > MaxPagesToView && PageModel.PageNumber > MaxPagesToView / 2) 
             {
                 item  = AddLinkToStart(urlHelper);
