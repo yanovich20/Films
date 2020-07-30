@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                Постер
+                </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Films.FirstOrDefault().Name)
             </th>
             <th>
@@ -24,7 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Films.FirstOrDefault().Producer)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Films.FirstOrDefault().Owner)
             </th>
             <th>
@@ -32,41 +35,44 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Films.FirstOrDefault().PosterFileNameOriginally)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Films)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Producer)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Owner.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PosterFileNameOnDisk)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PosterFileNameOriginally)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                <img width="100" src="@Url.Content(item.PosterFileNameOnDisk)">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producer)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Owner.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PosterFileNameOnDisk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PosterFileNameOriginally)
+            </td>*@
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

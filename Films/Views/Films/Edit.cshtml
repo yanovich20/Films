@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -38,15 +38,20 @@
                 <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId"></select>
                 <span asp-validation-for="OwnerId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PosterFileNameOnDisk" class="control-label"></label>
-                <input asp-for="PosterFileNameOnDisk" class="form-control" />
-                <span asp-validation-for="PosterFileNameOnDisk" class="text-danger"></span>
+            <div class="form-group d-none">
+                @*<label asp-for="PosterFileNameOnDisk" class="control-label"></label>*@
+                <input asp-for="PosterFileNameOnDisk" type="hidden" class="form-control" />
+                @*<span asp-validation-for="PosterFileNameOnDisk" class="text-danger"></span>*@
+            </div>
+            <div class="form-group d-none">
+                @*<label asp-for="PosterFileNameOriginally" class="control-label"></label>*@
+                <input asp-for="PosterFileNameOriginally" type="hidden" class="form-control" />
+                @*<span asp-validation-for="PosterFileNameOriginally" class="text-danger"></span>*@
             </div>
             <div class="form-group">
-                <label asp-for="PosterFileNameOriginally" class="control-label"></label>
-                <input asp-for="PosterFileNameOriginally" class="form-control" />
-                <span asp-validation-for="PosterFileNameOriginally" class="text-danger"></span>
+                <img width="100" id="img" />
+                <label class="control-label">Выберите файл</label>
+                <input type="file" id="poster" name="poster" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -61,4 +66,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/imgPreviiew.js"></script>
 }
