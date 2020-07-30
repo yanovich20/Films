@@ -15,7 +15,7 @@ namespace Films.TagHelpers
 {
     public class PaginationTagHelper : TagHelper
     {
-        private readonly int MaxPagesToView = 4;
+        private readonly int MaxPagesToView = 5;
         private IUrlHelperFactory urlHelperFactory;
         public PaginationTagHelper(IUrlHelperFactory helperFactory)
         {
@@ -37,41 +37,63 @@ namespace Films.TagHelpers
             tag.AddCssClass("pagination");
 
             //TagBuilder currentItem = CreateTag(PageModel.PageNumber, urlHelper);
+            int diff = 0;
+            int diffToEnd = 0; 
             TagBuilder item = null;
             //var startIndex = Math.Max(PageModel.PageNumber - MaxPagesToView / 2, 0);
             var startIndex = 0;
+            //startIndex = PageModel.PageNumber - MaxPagesToView / 2;
             startIndex = PageModel.PageNumber - MaxPagesToView / 2;
-            startIndex = startIndex > 0 ? startIndex : MaxPagesToView/2 - PageModel.PageNumber;
+            //startIndex = startIndex > 0 ? startIndex : MaxPagesToView/2 - PageModel.PageNumber;
+            if ((double)MaxPagesToView % 2.0 > 0)
+                startIndex--;
+            if (startIndex <= 0)
+            {
+                //diff = MaxPagesToView / 2 - PageModel.PageNumber;
+                //diffToEnd = MaxPagesToView / 2 - diff;
+                startIndex = 1;
+                //startIndex += MaxPagesToView / 2 - PageModel.PageNumber; 
+                diffToEnd = MaxPagesToView / 2 - PageModel.PageNumber;
+                if ((double)MaxPagesToView % 2.0 > 0)
+                    diffToEnd++;
+            }
+            
             var endIndex = 0;
-            endIndex = PageModel.PageNumber + MaxPagesToView / 2;
+            //if (diffToEnd == 0)
+            //{
+            //    diffToEnd++;
+            //}
+            endIndex = PageModel.PageNumber + MaxPagesToView / 2 + diffToEnd - 1;
+           // if ((double)MaxPagesToView % 2.0 > 0)
+             //   endIndex++;
             if (endIndex > PageModel.TotalPages)
             {
                 endIndex = PageModel.TotalPages; //+ MaxPagesToView / 2 - PageModel.PageNumber;
                 startIndex = startIndex - (PageModel.TotalPages - PageModel.PageNumber)-1;
             }
-            if (PageModel.TotalPages > MaxPagesToView && PageModel.PageNumber > MaxPagesToView / 2) 
+            if (PageModel.TotalPages > MaxPagesToView && PageModel.PageNumber >= MaxPagesToView ) 
             {
                 item  = AddLinkToStart(urlHelper);
                 tag.InnerHtml.AppendHtml(item);
             }
-            if (PageModel.PageNumber > MaxPagesToView / 2 && PageModel.PageNumber<PageModel.TotalPages-1)
+            if (PageModel.PageNumber > MaxPagesToView  && PageModel.PageNumber<PageModel.TotalPages-1)
             {
                 item = AddMultiPoint(urlHelper);//добавить многоточие слева
                 tag.InnerHtml.AppendHtml(item);
             }
-            for (int i=startIndex;i<endIndex; i++)
+            for (int i=startIndex;i<=endIndex; i++)
             {
-                item = CreateTag(i+1, urlHelper);
+                item = CreateTag(i, urlHelper);
                 tag.InnerHtml.AppendHtml(item);
             }
-            var countRight = PageModel.TotalPages - PageModel.PageNumber - MaxPagesToView / 2;//Для подсчета того, нужно ли добавлять многоточие справа
+            var countRight = PageModel.TotalPages - PageModel.PageNumber - MaxPagesToView/2;//Для подсчета того, нужно ли добавлять многоточие справа
             countRight = countRight > 0 ? MaxPagesToView:0;
             if (countRight > MaxPagesToView/2)
             {
                 item= AddMultiPoint(urlHelper);//добавить многоточие справа
                 tag.InnerHtml.AppendHtml(item);
             }
-            if (PageModel.TotalPages > MaxPagesToView && PageModel.PageNumber < PageModel.TotalPages) 
+            if (PageModel.TotalPages > MaxPagesToView && PageModel.PageNumber < PageModel.TotalPages-MaxPagesToView) 
             {
                 item = AddLinkToEnd(urlHelper);
                 tag.InnerHtml.AppendHtml(item);
