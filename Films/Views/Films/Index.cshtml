@@ -1,13 +1,13 @@
 ﻿@model IndexViewModel
 @addTagHelper *, Films
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Список фильмов";
 }
 
-<h2>Index</h2>
+<h2>Список фильмов</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-route-page="@ViewBag.Page">Добавить</a>
 </p>
 <table class="table">
     <thead>
@@ -27,15 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Films.FirstOrDefault().Producer)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Films.FirstOrDefault().Owner)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Films.FirstOrDefault().PosterFileNameOnDisk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Films.FirstOrDefault().PosterFileNameOriginally)
-            </th>*@
+           
             <th></th>
         </tr>
     </thead>
@@ -58,19 +50,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Producer)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Owner.Id)
-            </td>
+           
             <td>
-                @Html.DisplayFor(modelItem => item.PosterFileNameOnDisk)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PosterFileNameOriginally)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-page="@ViewBag.Page">Редактировать</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" asp-route-page="@ViewBag.Page">Детали</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" asp-route-page="@ViewBag.Page">Удалить</a>
             </td>
         </tr>
         }

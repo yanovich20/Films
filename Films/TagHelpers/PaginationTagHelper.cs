@@ -15,7 +15,7 @@ namespace Films.TagHelpers
 {
     public class PaginationTagHelper : TagHelper
     {
-        private readonly int MaxPagesToView = 8;
+        private readonly int MaxPagesToView = 5;
         private IUrlHelperFactory urlHelperFactory;
         public PaginationTagHelper(IUrlHelperFactory helperFactory)
         {

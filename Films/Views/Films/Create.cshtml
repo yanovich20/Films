@@ -1,17 +1,18 @@
 ﻿@model Films.Models.Film
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавление";
 }
 
-<h2>Create</h2>
+<h2>Добавление фильма</h2>
 
-<h4>Film</h4>
+<h4>Фильм</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="page" value="@ViewBag.Page"/>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -57,14 +58,14 @@
                 <input type="button" id="reset" value="Сбросить" class="form-control" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Добавить" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-page="@ViewBag.Page">Назад к списку</a>
 </div>
 
 @section Scripts {

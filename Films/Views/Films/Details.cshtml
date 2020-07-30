@@ -4,12 +4,18 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Детали</h2>
 
 <div>
-    <h4>Film</h4>
+    <h4>Фильм</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            Постер
+        </dt>
+        <dd>
+           <img width="100" src="@Url.Content(Model.PosterFileNameOnDisk)" alt="@Model.PosterFileNameOriginally">
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -34,7 +40,7 @@
         <dd>
             @Html.DisplayFor(model => model.Producer)
         </dd>
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.Owner)
         </dt>
         <dd>
@@ -51,10 +57,10 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.PosterFileNameOriginally)
-        </dd>
+        </dd>*@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |*@
+    <a asp-action="Index" asp-route-page="@ViewBag.Page">Назад к списку</a>
 </div>

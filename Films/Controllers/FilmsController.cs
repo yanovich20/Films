@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-
+using Microsoft.AspNetCore.Identity;
 using Films.Models;
 
 namespace Films.Controllers
@@ -19,19 +19,22 @@ namespace Films.Controllers
     public class FilmsController : Controller
     {
         private readonly FilmContext _context;
-        private readonly int pageSize = 5;
+        private readonly int pageSize = 2;
         private readonly string savePath = @"\posters\";
         private IHostingEnvironment _appEnvironment { get; }
+        private readonly UserManager<User> _userManager;
 
-        public FilmsController(FilmContext context,IHostingEnvironment hostingEnvironment)
+        public FilmsController(FilmContext context,IHostingEnvironment hostingEnvironment, UserManager<User> userManager)
         {
             _context = context;
             _appEnvironment = hostingEnvironment;
+            _userManager = userManager;
         }
 
         // GET: Films
         public async Task<IActionResult> Index(int page = 1)
         {
+            ViewBag.Page = page;
             var filmContext = _context.Films.Include(f => f.Owner);
             var count = await filmContext.CountAsync();
             var items = await filmContext.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -46,8 +49,9 @@ namespace Films.Controllers
         }
 
         // GET: Films/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(long? id,int page)
         {
+            ViewBag.Page = page;
             if (id == null)
             {
                 return NotFound();
@@ -65,9 +69,10 @@ namespace Films.Controllers
         }
 
         // GET: Films/Create
-        public IActionResult Create()
+        public IActionResult Create(int page)
         {
-            ViewData["OwnerId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewBag.Page = page;
+            //ViewData["OwnerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -76,8 +81,9 @@ namespace Films.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( Film film,IFormFile poster)
+        public async Task<IActionResult> Create( Film film,IFormFile poster,int page)
         {
+            ViewBag.Page = page;
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             FileSuccess result = null;
             if (poster != null)
@@ -94,6 +100,7 @@ namespace Films.Controllers
             }
             if (ModelState.IsValid)
             {
+                film.OwnerId = _userManager.GetUserId(HttpContext.User);
                 _context.Add(film);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -103,19 +110,27 @@ namespace Films.Controllers
         }
 
         // GET: Films/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id,int page)
         {
+            ViewBag.Page = page;
+            var userId = _userManager.GetUserId(HttpContext.User);
             if (id == null)
             {
                 return NotFound();
             }
-
+            
             var film = await _context.Films.FindAsync(id);
             if (film == null)
             {
                 return NotFound();
             }
-            ViewData["OwnerId"] = new SelectList(_context.Users, "Id", "Id", film.OwnerId);
+
+            if(film.OwnerId !=userId)
+            {
+                return StatusCode(403);
+            }
+
+           /// ViewData["OwnerId"] = new SelectList(_context.Users, "Id", "Id", film.OwnerId);
             return View(film);
         }
 
@@ -124,13 +139,18 @@ namespace Films.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, Film film,IFormFile poster)
+        public async Task<IActionResult> Edit(long id, Film film,IFormFile poster,int page)
         {
+            ViewBag.Page = page;
             if (id != film.Id)
             {
                 return NotFound();
             }
-
+            var userId = _userManager.GetUserId(HttpContext.User);
+            if (film.OwnerId != userId)
+            {
+                return StatusCode(403);
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -157,9 +177,9 @@ namespace Films.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { page = page });
             }
-            ViewData["OwnerId"] = new SelectList(_context.Users, "Id", "Id", film.OwnerId);
+            //ViewData["OwnerId"] = new SelectList(_context.Users, "Id", "Id", film.OwnerId);
             return View(film);
         }
 
@@ -206,8 +226,9 @@ namespace Films.Controllers
             return result;
         }
         // GET: Films/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(long? id,int page)
         {
+            ViewBag.Page = page;
             if (id == null)
             {
                 return NotFound();

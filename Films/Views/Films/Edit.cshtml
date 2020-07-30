@@ -1,17 +1,18 @@
 ﻿@model Films.Models.Film
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редактировать";
 }
 
-<h2>Edit</h2>
+<h2>Редактирование данных фильма</h2>
 
-<h4>Film</h4>
+<h4>Фильм</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="page" value="@ViewBag.Page"/>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -33,11 +34,12 @@
                 <input asp-for="Producer" class="form-control" />
                 <span asp-validation-for="Producer" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="OwnerId" class="control-label"></label>
-                <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId"></select>
-                <span asp-validation-for="OwnerId" class="text-danger"></span>
-            </div>
+            @*<div class="form-group">
+            <label asp-for="OwnerId" class="control-label"></label>
+            <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId"></select>
+            <span asp-validation-for="OwnerId" class="text-danger"></span>
+        </div>*@
+            <input asp-for="OwnerId" class="form-control" type="hidden"/>
             <div class="form-group d-none">
                 @*<label asp-for="PosterFileNameOnDisk" class="control-label"></label>*@
                 <input asp-for="PosterFileNameOnDisk" type="hidden" class="form-control" />
@@ -54,14 +56,14 @@
                 <input type="file" id="poster" name="poster" class="form-control" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Сохранить" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-page="@ViewBag.Page">Назад к списку</a>
 </div>
 
 @section Scripts {

@@ -39,7 +39,7 @@ namespace Films
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<FilmContext>();
-
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -66,7 +66,7 @@ namespace Films
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Films}/{action=Index}/{id?}");
             });
         }
     }
